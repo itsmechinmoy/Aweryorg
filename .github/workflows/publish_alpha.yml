@@ -25,16 +25,16 @@ jobs:
         run: chmod +x gradlew
         
       - name: Get Commits Since Last Run
-        run: >
+        run: |
           if [ -f last_sha.txt ]; then
             LAST_SHA=$(cat last_sha.txt)
+            echo "Commits since $LAST_SHA:"
           else
             LAST_SHA=$(git rev-list --max-parents=0 HEAD)
+            echo "Commits since initial commit:"
           fi
-          COMMIT_LOGS=$(git log $LAST_SHA..HEAD --pretty=format:"● %s ~%an
-          [֍](https://github.com/mrboomdeveloper/awery/commit/%H)")
-          COMMIT_LOGS=$(echo "$COMMIT_LOGS" | sed -E
-          's/#([0-9]+)/[#\1](https:\/\/github.com\/mrboomdeveloper\/awery\/pull\/\1)/g')
+          COMMIT_LOGS=$(git log $LAST_SHA..HEAD --pretty=format:"● %s ~%an [֍](https://github.com/mrboomdeveloper/awery/commit/%H)")
+          COMMIT_LOGS=$(echo "$COMMIT_LOGS" | sed -E 's/#([0-9]+)/[#\1](https:\/\/github.com\/mrboomdeveloper\/awery\/pull\/\1)/g')
           FORMATTED_COMMIT_LOGS="${COMMIT_LOGS//'%'/'%25'}"
           FORMATTED_COMMIT_LOGS="${FORMATTED_COMMIT_LOGS//$'\n'/'%0A'}"
           echo "COMMIT_LOG=${FORMATTED_COMMIT_LOGS}" >> $GITHUB_ENV
